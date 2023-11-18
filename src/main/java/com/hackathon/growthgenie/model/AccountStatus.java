@@ -1,13 +1,11 @@
 package com.hackathon.growthgenie.model;
 
 public enum AccountStatus {
-  ACTIVE(0, "Active"), CLOSED(1, "Closed"), FROZEN(2, "Frozen");
+  ACTIVE("Active"), CLOSED("Closed"), FROZEN("Frozen");
 
-  int id;
   String type;
 
-  AccountStatus(int id, String type) {
-    this.id = id;
+  AccountStatus(String type) {
     this.type = type;
   }
 }

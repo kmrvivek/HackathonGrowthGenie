@@ -28,7 +28,7 @@ public class Account implements Serializable {
   private Integer customerId;
 
   @Column(name = "ACCOUNTTYPE")
-  private AccountType accountType;
+  private String accountType;
 
   @Column(name = "ACCOUNTBALANCE")
   private Long accountBalance;

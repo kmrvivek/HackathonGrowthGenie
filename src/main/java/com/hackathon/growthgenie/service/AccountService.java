@@ -22,8 +22,8 @@ public class AccountService {
     return accountRepository.findById(accountId).get();
   }
 
-  public List<Account> getAccountByCustomerId(Integer id) {
-    List<Account> accounts = accountRepository.findByCustomerId(id);
+  public List<Account> getAccountByCustomerId(Integer customerId) {
+    List<Account> accounts = accountRepository.findByCustomerId(customerId);
     return accounts;
   }
 
