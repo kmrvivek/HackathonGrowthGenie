@@ -17,6 +17,7 @@ import java.util.List;
 public class TransactionController {
 
     private static final Logger logger= LoggerFactory.getLogger(TransactionController.class);
+    
     @Autowired
     TransactionService transactionService;
 
@@ -32,9 +33,9 @@ public class TransactionController {
 
     @GetMapping("/transactionById/{transactionId}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable("transactionId") int transactionId){
-        logger.info("Inside getTransactionById ",transactionId);
+        logger.info("Inside getTransactionById {}",transactionId);
         Transaction transaction=transactionService.getTransactionById(transactionId);
-        logger.info("returning transaction ",transaction);
+        logger.info("returning transaction {}",transaction);
         return new ResponseEntity<>(transaction,new HttpHeaders(), HttpStatus.OK);
     }
 
@@ -42,14 +43,18 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> getTransactionByStatus(@RequestParam(name = "TransactionStatus", required = true )String transactionStatus){
         logger.info("Inside getTransactionByStatus");
         List<Transaction> transactions=transactionService.getTransactionByStatus(transactionStatus);
-        logger.info("returning all transactions ",transactions);
+        logger.info("returning all transactions {}",transactions);
         return new ResponseEntity<>(transactions,new HttpHeaders(), HttpStatus.OK);
     }
+    
+    
+    @GetMapping("/transactionByAccountId/{accountID}")
+    public ResponseEntity<List<Transaction>> getTransactionByAccountId(@PathVariable("accountID") String accountID){
+       logger.info("Inside getTransactionByAccountId :",accountID);
+    	List<Transaction> transactions=transactionService.getTransactionByAccountId(accountID);
+    	logger.info("returning transactions : {} ",transactions);
+    	return new ResponseEntity<>(transactions,new HttpHeaders(), HttpStatus.OK);
 
-//    1. all transaction
-//            2. transaction by id
-//    3. transaction by status
-//    4. trasnaction by amount
-//    5. transaction by account id
-//            6. transaction by date
+    }
+
 }

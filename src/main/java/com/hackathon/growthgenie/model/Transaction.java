@@ -16,15 +16,16 @@ public class Transaction {
     private int transactionID;
 
     @Column(name = "ACCOUNTID")
-    private int accountID;
+    private String accountID;
 
     @Column(name = "TRANSACTIONTYPE")
     private String transactionType;
 
     @Column(name = "AMOUNT")
-    private double amount;
+    private int amount;
 
     @Column(name = "TRANSACTIONDATE")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date transactionDate;
 
     @Column(name = "TRANSACTIONSTATUS")

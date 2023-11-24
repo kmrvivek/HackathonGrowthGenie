@@ -1,5 +1,6 @@
 package com.hackathon.growthgenie.service;
 
+import com.hackathon.growthgenie.exception.RecordNotFoundException;
 import com.hackathon.growthgenie.model.Transaction;
 import com.hackathon.growthgenie.model.TransactionStatus;
 import com.hackathon.growthgenie.repository.TransactionRepository;
@@ -27,14 +28,21 @@ public class TransactionService {
         return transactionRepository.findById(transactionId).get();
     }
 
-    public List<Transaction> getTransactionByStatus(String transactionStatus) {
+    public List<Transaction> getTransactionByStatus(String transactionStatus) throws RecordNotFoundException{
         try {
             TransactionStatus transactionByStatus = TransactionStatus.valueOf(transactionStatus.toUpperCase());
             List<Transaction> transactions=transactionRepository.findByTransactionStatus(transactionByStatus.name());
             return  transactions;
         } catch (Exception e) {
-            logger.error("error while getTransactionByStatsu ", e.getStackTrace());
-            throw new RuntimeException("Invalid status ..!!");
+           logger.error("error while getTransactionByStatsu ", e.getStackTrace());
+            throw new RecordNotFoundException("Invalid status ..!!");
         }
+    }
+    
+    public List<Transaction> getTransactionByAccountId(String accountId){
+    	logger.info("Inside getTransactionByAccountId ",accountId);
+    	List<Transaction> transactions=transactionRepository.findByAccountID(accountId);
+    	logger.info("returning transactions {}",transactions);
+    	return transactions;
     }
 }

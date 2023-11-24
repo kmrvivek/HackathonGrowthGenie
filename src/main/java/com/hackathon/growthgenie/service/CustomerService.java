@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.hackathon.growthgenie.exception.RecordNotFoundException;
 import com.hackathon.growthgenie.model.Customer;
 import com.hackathon.growthgenie.repository.CustomerRepository;
 
@@ -14,7 +16,7 @@ public class CustomerService {
   @Autowired
   private CustomerRepository customerRepository;
 
-  public List<Customer> getCustomers(Integer id) throws RuntimeException {
+  public List<Customer> getCustomers(Integer id) throws RecordNotFoundException {
     if(id == null) {
       List<Customer> customers =  customerRepository.findAll();
       return customers;
@@ -26,7 +28,7 @@ public class CustomerService {
       customers.add(customer.get());
         return customers;
     } else {
-        throw new RuntimeException("No employee record exist for given id");
+        throw new RecordNotFoundException("No employee record exist for given id");
     }
   }
 
