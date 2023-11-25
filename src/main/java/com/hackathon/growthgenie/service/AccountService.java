@@ -34,13 +34,12 @@ public class AccountService {
 
   public Account updateAccount(String accountId, Account account) {
    Account existingAccount = accountRepository.findById(accountId).get();
-  //  existingAccount.setAccountBalance(account.());
-//    existingAccount.setAccountStatus(account.getAccountStatus());
-//    existingAccount.setAccountType(account.getAccountType());
-//    existingAccount.setInterestRate(account.getInterestRate());
-//    existingAccount.setLastTransactionDate(new Date());
-    Account updatedAccount = accountRepository.save(account);
-    return updatedAccount;
+    existingAccount.setAccountBalance(account.getAccountBalance());
+    existingAccount.setAccountStatus(account.getAccountStatus());
+    existingAccount.setAccountType(account.getAccountType());
+    existingAccount.setInterestRate(account.getInterestRate());
+    existingAccount.setLastTransactionDate(new Date());
+      return accountRepository.save(account);
   }
 
 
