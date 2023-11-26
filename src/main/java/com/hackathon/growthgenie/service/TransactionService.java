@@ -37,7 +37,7 @@ public class TransactionService {
             List<Transaction> transactions=transactionRepository.findByTransactionStatus(transactionByStatus.name());
             return  transactions;
         } catch (Exception e) {
-           logger.error("error while getTransactionByStatsu ", e.getStackTrace());
+           logger.error("error while getTransactionByStatus {}", e.getStackTrace());
             throw new RecordNotFoundException("Invalid status ..!!");
         }
     }

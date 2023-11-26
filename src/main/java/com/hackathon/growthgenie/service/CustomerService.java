@@ -12,26 +12,23 @@ import com.hackathon.growthgenie.repository.CustomerRepository;
 
 @Service
 public class CustomerService {
-  
+
   @Autowired
   private CustomerRepository customerRepository;
 
-  public List<Customer> getCustomers(Integer id) throws RecordNotFoundException {
-    if(id == null) {
-      List<Customer> customers =  customerRepository.findAll();
-      return customers;
-    }
-    Optional<Customer> customer = customerRepository.findById(id);
-    
-    if(customer.isPresent()) {
-      List<Customer> customers = new ArrayList<>();
-      customers.add(customer.get());
-        return customers;
-    } else {
-        throw new RecordNotFoundException("No employee record exist for given id");
-    }
+  public List<Customer> getCustomers() throws RecordNotFoundException {
+
+    return customerRepository.findAll();
   }
 
+  public Customer getCustomerById(int id) {
 
+    Optional<Customer> customer = customerRepository.findById(id);
 
+    if (customer.isPresent()) {
+      return customer.get();
+    } else {
+      throw new RecordNotFoundException("No employee record exist for given id");
+    }
+  }
 }
