@@ -82,4 +82,9 @@ public class TransactionController {
         return new ResponseEntity<>("Transaction Deleted..!!",new HttpHeaders(),HttpStatus.OK);
     }
 
+    @GetMapping("/transactionsByCustomerId/{customerId}")
+    public ResponseEntity<List<List<Transaction>>> getTransactionByCustomerId(@PathVariable int customerId){
+        logger.info("getTransactionByCustomerId with cust id "+customerId);
+        return new ResponseEntity<>(transactionService.getTransactionByCustomerById(customerId),new HttpHeaders(),HttpStatus.OK);
+    }
 }

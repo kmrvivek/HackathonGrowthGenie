@@ -2,16 +2,18 @@ package com.hackathon.growthgenie.service;
 
 import com.hackathon.growthgenie.dto.TransactionDTO;
 import com.hackathon.growthgenie.exception.RecordNotFoundException;
+import com.hackathon.growthgenie.model.Account;
 import com.hackathon.growthgenie.model.Transaction;
 import com.hackathon.growthgenie.model.TransactionStatus;
+import com.hackathon.growthgenie.repository.AccountRepository;
 import com.hackathon.growthgenie.repository.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.util.EnumUtils;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class TransactionService {
 
     @Autowired
     TransactionRepository transactionRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     public List<Transaction> getAllTransaction() {
         return transactionRepository.findAll();
@@ -83,5 +88,18 @@ public class TransactionService {
     public void deleteTransaction(int transactionId){
         Transaction transaction= transactionRepository.findById(transactionId).get();
         transactionRepository.delete(transaction);
+    }
+
+    public List<List<Transaction>> getTransactionByCustomerById(int customerID){
+        logger.info("Customer id "+customerID);
+        List<Account> accounts = accountRepository.findByCustomerId(customerID);
+        logger.info("accounts "+accounts);
+        List<List<Transaction>> transactions=new ArrayList<>();
+        for(Account account:accounts){
+            List<Transaction> transaction=transactionRepository.findByAccountID(account.getAccountId());
+            transactions.add(transaction);
+        }
+        logger.info("transactions"+transactions);
+        return transactions;
     }
 }
