@@ -53,4 +53,9 @@ public class InvestmentAccountController {
     public ResponseEntity<TaxCalculationsDTO> calculateInvestmentTax(@PathVariable int customerId){
       return new ResponseEntity<>(investmentService.calculateInvestmentTax(customerId), new HttpHeaders(), HttpStatus.OK);
     }
+
+    @GetMapping("/popularInvestments")
+    public ResponseEntity<?> popularInvestments(){
+        return  new ResponseEntity<>(investmentService.popularInvestments(),new HttpHeaders(),HttpStatus.OK);
+    }
 }
