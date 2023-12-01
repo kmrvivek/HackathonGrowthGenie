@@ -211,4 +211,37 @@ public class PopularInvestmentService {
       }
       return 10;
     }
+
+    public  Map<String,Map<String,Long>>  popularInvestments(){
+        Map<String,Map<String,Long>> popularInvestments=new HashMap<>();
+
+        Map<String, Long> popularMutualFunds = mutualFundsRepository.findAll().stream()
+                .collect(Collectors.groupingBy(MutualFunds::getFundName, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(10)  // Limit to the top 10 entries
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        Map<String,Long> popularStocks= stocksRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Stocks::getStockName,Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(10)  // Limit to the top 10 entries
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        Map<String, Long> popularFixedDeposits = fixedDepositsRepository.findAll().stream()
+                .collect(Collectors.groupingBy(FixedDeposits::getInterestPaymentFrequency, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(10)  // Limit to the top 10 entries
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+
+
+        popularInvestments.put("Mutual Funds",popularMutualFunds);
+        popularInvestments.put("Stocks",popularStocks);
+        popularInvestments.put("Fixed Deposits",popularFixedDeposits);
+
+        return popularInvestments;
+    }
 }
