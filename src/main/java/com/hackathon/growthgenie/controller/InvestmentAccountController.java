@@ -1,5 +1,7 @@
 package com.hackathon.growthgenie.controller;
 
+import com.hackathon.growthgenie.dto.TaxCalculationsDTO;
+import com.hackathon.growthgenie.dto.TopCustomerDTO;
 import com.hackathon.growthgenie.service.InvestmentAccountService;
 import com.hackathon.growthgenie.service.PopularInvestmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,5 +42,15 @@ public class InvestmentAccountController {
     @GetMapping("/roi/topinvestors/{n}")
     public ResponseEntity<?> getTopInvestors(@PathVariable int n) {
         return new ResponseEntity<>(investmentService.topInvestors(n), new HttpHeaders(), HttpStatus.OK);
+    }
+    
+    @GetMapping("/historical/{customerId}")
+    public ResponseEntity<List<TopCustomerDTO>> getHistoricalReturns(@PathVariable int customerId){
+      return new ResponseEntity<>(investmentService.getHistoricalReturns(customerId), new HttpHeaders(), HttpStatus.OK);
+    }
+    
+    @GetMapping("/taxCalculation/{customerId}")
+    public ResponseEntity<TaxCalculationsDTO> calculateInvestmentTax(@PathVariable int customerId){
+      return new ResponseEntity<>(investmentService.calculateInvestmentTax(customerId), new HttpHeaders(), HttpStatus.OK);
     }
 }

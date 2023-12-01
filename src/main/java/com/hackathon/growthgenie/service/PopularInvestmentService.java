@@ -3,6 +3,8 @@ package com.hackathon.growthgenie.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackathon.growthgenie.dto.StocksDto;
+import com.hackathon.growthgenie.dto.TaxCalculationsDTO;
+import com.hackathon.growthgenie.dto.TopCustomerDTO;
 import com.hackathon.growthgenie.dto.TopInvestorsDto;
 import com.hackathon.growthgenie.dto.TopPerformingInvestmentsDTO;
 import com.hackathon.growthgenie.model.*;
@@ -11,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -137,5 +141,74 @@ public class PopularInvestmentService {
         Map<Integer, Customer> customerMap = customerRepository.findAllByCustomerIdIn(ids).stream().collect(Collectors.toMap(Customer::getCustomerId, Function.identity()));
         content.forEach(el -> dtos.add(TopInvestorsDto.builder().name(customerMap.get(el.getCustomerID()).getFirstName() + " " + customerMap.get(el.getCustomerID()).getLastName()).investmentType(el.getAccountType()).portfolio(el.getInvestmentPortfolio()).returns(el.getReturns()).build()));
         return dtos;
+    }
+
+    public List<TopCustomerDTO> getHistoricalReturns(int customerId) {
+      List<InvestmentAccounts> investmentDetails = investmentAccountRepository.findByCustomerID(customerId);
+      Instant now = Instant.now(); //current date
+      Customer customer = customerRepository.findById(customerId).get();
+      List<TopCustomerDTO> sixMonthReturnData = new ArrayList<>();
+      for(int i=1; i<=6; i++) {
+        Instant before = now.minus(Duration.ofDays((i*30)+180));
+        Date dateBefore = Date.from(before);
+        double returns = 0.0d;
+        for(InvestmentAccounts investments : investmentDetails) {
+          if(dateBefore.after(investments.getInvestmentStartDate()) && dateBefore.before(investments.getInvestmentEndDate())) {
+            returns += investments.getReturns();
+          }
+        }
+        sixMonthReturnData.add(new TopCustomerDTO(customerId, customer.getFirstName() + " "+customer.getLastName(), dateBefore, returns));
+        
+      }
+      
+      return sixMonthReturnData;
+    }
+
+    public TaxCalculationsDTO calculateInvestmentTax(int customerId) {
+      List<InvestmentAccounts> investmentDetails = investmentAccountRepository.findByCustomerID(customerId);
+      Instant now = Instant.now(); //current date
+      Instant before = now.minus(Duration.ofDays(365));
+      Date dateBefore = Date.from(before);
+      Customer customer = customerRepository.findById(customerId).get();
+      Map<String, Double> taxTypeReturn = new HashMap<>();
+      double totalTax = 0.0d;
+      for(InvestmentAccounts investments : investmentDetails) {
+        if(investments.getInvestmentEndDate().after(dateBefore)) {
+          String accountType = investments.getAccountType();
+          double taxSlab = getTaxSlab(investments);
+          double taxValue = investments.getInvestmentPortfolio()* (investments.getReturns()/100);
+          if((accountType.equalsIgnoreCase("Stocks") || accountType.equalsIgnoreCase("Mutual Funds")) && taxSlab <= 10.1) {
+            if(taxValue > 100000) {
+              taxValue = taxValue - 100000;
+              taxValue = taxValue * taxSlab/100;
+            } else {
+              taxValue = 0.0d;
+            }
+          } else {
+            taxValue = taxValue * taxSlab/100;
+          }
+          totalTax += taxValue;
+          if(taxTypeReturn.containsKey(accountType)) {
+            taxTypeReturn.put(accountType, taxTypeReturn.get(accountType) + taxValue);
+          } else {
+            taxTypeReturn.put(accountType, taxValue);
+          }
+        }
+      }  
+      TaxCalculationsDTO taxCalculationsDTO = new TaxCalculationsDTO(customerId, customer.getFirstName() + " "+customer.getLastName(), taxTypeReturn, totalTax);
+      return taxCalculationsDTO;
+    }
+
+    private double getTaxSlab(InvestmentAccounts investments) {
+      if(investments.getAccountType().equalsIgnoreCase("Stocks") || investments.getAccountType().equalsIgnoreCase("Mutual Funds")) {
+        long diff = investments.getInvestmentEndDate().getTime() - investments.getInvestmentStartDate().getTime();
+        long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        if(days > 365) {
+          return 10;
+        } else {
+          return 15;
+        }
+      }
+      return 10;
     }
 }
