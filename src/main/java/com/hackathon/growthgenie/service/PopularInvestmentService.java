@@ -244,4 +244,46 @@ public class PopularInvestmentService {
 
         return popularInvestments;
     }
+
+    public Map<String,Double>  investmentByCustomerId(int customerId) {
+        List<InvestmentAccounts> investmentAccounts=investmentAccountRepository.findByCustomerID(customerId);
+        Map<String,Double> investmentBycustomer=new HashMap<>();
+        for(InvestmentAccounts investmentAccount:investmentAccounts){
+            if(investmentAccount.getAccountType().equalsIgnoreCase("Mutual Funds")){
+                investmentBycustomer.put("Mutual Funds",getSumOfMutualFundsByInvestmentAccountID(investmentAccount.getInvestmentAccountID()));
+            }else if(investmentAccount.getAccountType().equalsIgnoreCase("Stocks")){
+                investmentBycustomer.put("Stocks",getSumOfStocksByInvestmentId(investmentAccount.getInvestmentAccountID()));
+            }else if(investmentAccount.getAccountType().equalsIgnoreCase("Fixed Deposits")){
+                investmentBycustomer.put("Fixed Deposits",getSumOfFixedDepositsByInvestmentAccountID(investmentAccount.getInvestmentAccountID()));
+            }
+        }
+        return investmentBycustomer;
+    }
+
+    private Double getSumOfStocksByInvestmentId(String investmentAccountID) {
+        List<Stocks> stocks=stocksRepository.findByInvestmentAccountID(investmentAccountID);
+        double stockAmount=0;
+        for(Stocks stock:stocks){
+            stockAmount+= stock.getQuantity()*stock.getPurchasePrice();
+        }
+        return  stockAmount;
+    }
+
+    private Double getSumOfFixedDepositsByInvestmentAccountID(String investmentAccountID) {
+        List<FixedDeposits> fixedDeposits=fixedDepositsRepository.findByInvestmentAccountId(investmentAccountID);
+        double fixedDepositAmount=0;
+        for (FixedDeposits fixedDeposit:fixedDeposits){
+            fixedDepositAmount+=fixedDeposit.getPrincipalAmount();
+        }
+        return fixedDepositAmount;
+    }
+
+    private Double getSumOfMutualFundsByInvestmentAccountID(String investmentAccountID) {
+        List<MutualFunds> mutualFunds=mutualFundsRepository.findByInvestmentAccountId(investmentAccountID);
+        double mutualFundsAmount=0;
+        for(MutualFunds mutualFund:mutualFunds){
+            mutualFundsAmount+=mutualFund.getInvestmentAmount();
+        }
+        return mutualFundsAmount;
+    }
 }

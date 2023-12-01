@@ -58,4 +58,9 @@ public class InvestmentAccountController {
     public ResponseEntity<?> popularInvestments(){
         return  new ResponseEntity<>(investmentService.popularInvestments(),new HttpHeaders(),HttpStatus.OK);
     }
+
+    @GetMapping("/getInvestmentByCustomerId/{customerId}")
+    public ResponseEntity<?> investmentByCustomerId(@PathVariable int customerId){
+        return  new ResponseEntity<>(investmentService.investmentByCustomerId(customerId),new HttpHeaders(),HttpStatus.OK);
+    }
 }
