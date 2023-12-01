@@ -31,5 +31,10 @@ public class CustomerController {
     Customer customer=customerService.getCustomerById(id);
     return new ResponseEntity<>(customer,new HttpHeaders(),HttpStatus.OK);
   }
+
+  @GetMapping("/byEmailId")
+  public int getIdByCustomerEmailId(@RequestParam (name = "emailId" , required = true) String emailId){
+    return customerService.getCustomerByEmailId(emailId);
+  }
   
 }

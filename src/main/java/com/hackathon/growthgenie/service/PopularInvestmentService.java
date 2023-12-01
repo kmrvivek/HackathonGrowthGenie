@@ -245,7 +245,7 @@ public class PopularInvestmentService {
         return popularInvestments;
     }
 
-    public Map<String,Double>  investmentByCustomerId(int customerId) {
+    public Map<String,Double> investmentByCustomerId(int customerId) {
         List<InvestmentAccounts> investmentAccounts=investmentAccountRepository.findByCustomerID(customerId);
         Map<String,Double> investmentBycustomer=new HashMap<>();
         for(InvestmentAccounts investmentAccount:investmentAccounts){

@@ -21,6 +21,14 @@ public class CustomerService {
     return customerRepository.findAll();
   }
 
+  public int getCustomerByEmailId(String emailId){
+    int custId=customerRepository.findByEmail(emailId).getCustomerId();
+    if(custId>0){
+      return custId;
+    }else{
+      return -1;
+    }
+  }
   public Customer getCustomerById(int id) {
 
     Optional<Customer> customer = customerRepository.findById(id);
