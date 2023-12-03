@@ -1,8 +1,6 @@
 
 # HackathonGrowthGenie Backend Application
-
-Aims to enhance the financial well-being of account holders. The application is be accessible through both mobile and web interfaces, catering to a diverse user base.
-This Repository contains the backend application of the wealth management app covering both theme 1 and theme 2.
+This Repository contains the backend application of the wealth management app covering both theme 1 and theme 2. Application adheres to SOLID design principles in compliance to industry practices. The architecture is designed with a focus on scalibility, high availability and future expansion.
 ## Technology Stack
 - Java 8
 - Spring Boot 2.7.17
