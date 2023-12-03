@@ -2,17 +2,14 @@ package com.hackathon.growthgenie.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hackathon.growthgenie.dto.StocksDto;
-import com.hackathon.growthgenie.dto.TaxCalculationsDTO;
-import com.hackathon.growthgenie.dto.TopCustomerDTO;
-import com.hackathon.growthgenie.dto.TopInvestorsDto;
-import com.hackathon.growthgenie.dto.TopPerformingInvestmentsDTO;
+import com.hackathon.growthgenie.dto.*;
 import com.hackathon.growthgenie.model.*;
 import com.hackathon.growthgenie.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -37,7 +34,7 @@ public class PopularInvestmentService {
         Map<String, List<Map<String, Object>>> map = new HashMap<>();
         map.put("Stocks", getTopStocks(n));
         map.put("Mutual Funds", getTopMutualFunds(n));
-        map.put("Fixed Deposits", getTopMutualFunds(n));
+        map.put("Fixed Deposits", getTopFixedDeposits(n));
         return map;
     }
 
