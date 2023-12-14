@@ -1,12 +1,12 @@
 package com.hackathon.growthgenie.dto;
 
-import com.hackathon.growthgenie.model.Account;
-import com.hackathon.growthgenie.model.Transaction;
-import lombok.*;
-
-import javax.persistence.Entity;
 import java.util.List;
 import java.util.Map;
+import com.hackathon.growthgenie.model.Account;
+import com.hackathon.growthgenie.model.Transaction;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

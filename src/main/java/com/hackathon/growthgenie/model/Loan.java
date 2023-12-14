@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +30,7 @@ public class Loan implements Serializable {
   private Integer customerId;
   
   @Column(name="LOANTYPE")
-  private LoanType loanType;
+  private String loanType;
   
   @Column(name="LOANAMOUNT")
   private long loanAmount;
@@ -37,7 +39,7 @@ public class Loan implements Serializable {
   private double interestRate;
   
   @Column(name="LOANSTATUS")
-  private LoanStatus loanStatus;
+  private String loanStatus;
     
   @Column(name="EMI")
   private int emi;
