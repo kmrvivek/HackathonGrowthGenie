@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class InvestmentDetailsDTO {
   private Integer customerId;
   private String customerName;
-  private Map<String, List<Stocks>> stocksDetails;
-  private Map<String, List<MutualFunds>> mutualFundDetails;
-  private Map<String, List<FixedDeposits>> fixedDepositsDetails;
-  private Map<String, List<Loan>> loansDetails;
+  private List<Stocks> stocksDetails;
+  private List<MutualFunds> mutualFundDetails;
+  private List<FixedDeposits> fixedDepositsDetails;
+  private List<Loan> loansDetails;
 }
