@@ -305,21 +305,26 @@ public class PopularInvestmentService {
             Customer customer = customerRepository.findById(customerId).get();
             investmentDetailsDTO.setCustomerId(customerId);
             investmentDetailsDTO.setCustomerName(customer.getFirstName() + " " + customer.getLastName());
-            Map<String, List<Stocks>> stocksDetails = new HashMap<>();
-            Map<String, List<MutualFunds>> mutualFundDetails = new HashMap<>();
-            Map<String, List<FixedDeposits>> fixedDepositsDetails = new HashMap<>();
+             List<Stocks> stocksDetails = new ArrayList<>();
+             List<MutualFunds> mutualFundDetails = new ArrayList<>();
+            List<FixedDeposits> fixedDepositsDetails = new ArrayList<>();
             List<InvestmentAccounts> investmentAccounts = investmentAccountRepository.findByCustomerID(customerId);
             for (InvestmentAccounts investmentAccount : investmentAccounts) {
                 String investmentAccountId = investmentAccount.getInvestmentAccountID();
-                List<Stocks> stocksByAccountId = getStockInvestmentByAccountId(investmentAccountId);
-                stocksDetails.put(investmentAccountId, stocksByAccountId);
-                List<MutualFunds> mutualFundByAccountId = getMutualFundInvestmentByAccountId(investmentAccountId);
-                mutualFundDetails.put(investmentAccountId, mutualFundByAccountId);
-                List<FixedDeposits> fixedDepositsByAccountId = getFixedDepositsByAccountId(investmentAccountId);
-                fixedDepositsDetails.put(investmentAccountId, fixedDepositsByAccountId);
+                stocksDetails = getStockInvestmentByAccountId(investmentAccountId);
+              //  stocksDetails.put(investmentAccountId, stocksByAccountId);
+                mutualFundDetails= getMutualFundInvestmentByAccountId(investmentAccountId);
+              //  mutualFundDetails.put(investmentAccountId, mutualFundByAccountId);
+                fixedDepositsDetails = getFixedDepositsByAccountId(investmentAccountId);
+            //    fixedDepositsDetails.put(investmentAccountId, fixedDepositsByAccountId);
             }
             List<Loan> loans = getLoansByCustomerId(customerId);
-            Map<String, List<Loan>> loansDetails = loans.stream().collect(Collectors.groupingBy(loan -> loan.getLoanStatus()));
+            List<Loan> loansDetails = loans.stream()
+                    .collect(Collectors.groupingBy(Loan::getLoanStatus, Collectors.toList()))
+                    .values()
+                    .stream()
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
             investmentDetailsDTO.setMutualFundDetails(mutualFundDetails);
             investmentDetailsDTO.setFixedDepositsDetails(fixedDepositsDetails);
             investmentDetailsDTO.setStocksDetails(stocksDetails);
